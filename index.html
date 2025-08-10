@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Face Expression Detection</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <!-- Topbar -->
+    <header class="topbar">
+        <div class="container topbar__wrap">
+            <div class="brand">
+                <div class="brand__logo" aria-hidden="true">FE</div>
+                <div class="brand__text">
+                    <strong>Face Expression</strong>
+                    <span>Detection UI</span>
+                </div>
+            </div>
+            <nav class="nav">
+                <a href="#input">Input</a>
+                <a href="#results">Results</a>
+                <a href="#history">Timeline</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Tabs: Upload | Webcam -->
+        <section id="input" class="card card--pad-lg">
+            <h2>Provide input</h2>
+
+            <div class="tabs">
+                <input type="radio" id="tab-upload" name="tabs" checked>
+                <label class="tab" for="tab-upload">Upload</label>
+
+                <input type="radio" id="tab-webcam" name="tabs">
+                <label class="tab" for="tab-webcam">Webcam</label>
+
+                <div class="tab__content">
+                    <!-- Upload -->
+                    <div class="pane" data-pane="upload">
+                        <p class="muted tiny">Upload an image (JPG/PNG) with one or more faces. Your backend will run detection.</p>
+                        <div class="grid-2">
+                            <div>
+                                <label class="label">Upload image</label>
+                                <div class="dropzone" role="button" aria-label="Upload image">
+                                    <input type="file" accept="image/*" />
+                                    <div class="dropzone__hint">
+                                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12l-7-8-7 8h4v8h6v-8h4z"/></svg>
+                                        <div>
+                                            <strong>Drag & drop</strong> or click to browse
+                                            <div class="muted tiny">JPG • PNG • WebP</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="label">Preview</label>
+                                <div class="preview">
+                                    <div class="preview__stage">
+                                        <span class="muted tiny">Image preview &amp; face boxes appear here</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="u-flex-right">
+                            <button class="btn" type="button" aria-disabled="true" title="Wire this to your JS">Detect</button>
+                        </div>
+                    </div>
+
+                    <!-- Webcam -->
+                    <div class="pane" data-pane="webcam">
+                        <p class="muted tiny">Start camera to capture a frame or stream (requires JS to enable and capture).</p>
+                        <div class="grid-2">
+                            <div>
+                                <label class="label">Webcam</label>
+                                <div class="webcam">
+                                    <div class="webcam__stage">
+                                        <span class="muted tiny">Live video will show here</span>
+                                    </div>
+                                    <div class="webcam__controls">
+                                        <button class="btn btn--ghost" type="button" aria-disabled="true">Start</button>
+                                        <button class="btn btn--ghost" type="button" aria-disabled="true">Capture</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="label">Last capture</label>
+                                <div class="preview">
+                                    <div class="preview__stage">
+                                        <span class="muted tiny">Captured frame preview</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="u-flex-right">
+                            <button class="btn" type="button" aria-disabled="true">Detect</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results -->
+        <section id="results" class="card card--pad-lg">
+            <h2>Detection results</h2>
+
+            <div class="cards-3">
+                <!-- Top Emotion -->
+                <article class="kpi">
+                    <div class="kpi__head"><span>Top expression</span></div>
+                    <div class="kpi__value badge badge--ok">Happy</div>
+                    <ul class="list list--bullets">
+                        <li>Confidence: <strong>0.91</strong></li>
+                        <li>Faces detected: <strong>2</strong></li>
+                    </ul>
+                </article>
+
+                <!-- Confidence Bars -->
+                <article class="kpi">
+                    <div class="kpi__head"><span>Confidence by class</span></div>
+                    <div class="bars">
+                        <div class="bar"><span>Happy</span>
+                            <div class="progress">
+                                <div class="progress__bar" style="width: 91%"></div>
+                            </div><em>0.91</em></div>
+                        <div class="bar"><span>Neutral</span>
+                            <div class="progress">
+                                <div class="progress__bar" style="width: 54%"></div>
+                            </div><em>0.54</em></div>
+                        <div class="bar"><span>Surprised</span>
+                            <div class="progress">
+                                <div class="progress__bar" style="width: 32%"></div>
+                            </div><em>0.32</em></div>
+                        <div class="bar"><span>Sad</span>
+                            <div class="progress">
+                                <div class="progress__bar" style="width: 12%"></div>
+                            </div><em>0.12</em></div>
+                    </div>
+                </article>
+
+                <!-- Flags -->
+                <article class="kpi">
+                    <div class="kpi__head"><span>Quality flags</span></div>
+                    <div class="kpi__value badge badge--warn">3 flags</div>
+                    <ul class="list">
+                        <li>Low light</li>
+                        <li>Face angle &gt; 20°</li>
+                        <li>Small face region</li>
+                    </ul>
+                </article>
+            </div>
+
+            <!-- Thumbnails -->
+            <div class="faces card card--inset">
+                <div class="faces__head">
+                    <h3 class="tiny">Faces</h3>
+                    <a class="chip" href="#details-modal">View details</a>
+                </div>
+                <div class="faces__strip">
+                    <div class="face">
+                        <div class="face__img" role="img" aria-label="Face 1 thumbnail"></div>
+                        <div class="face__meta tiny">#1 • Happy • 0.93</div>
+                    </div>
+                    <div class="face">
+                        <div class="face__img" role="img" aria-label="Face 2 thumbnail"></div>
+                        <div class="face__meta tiny">#2 • Neutral • 0.62</div>
+                    </div>
+                    <div class="face face--ghost"><span class="muted tiny">+ more as detected</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline -->
+        <section id="history" class="card card--pad-lg">
+            <h2>Session timeline</h2>
+            <div class="table-wrap">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Face</th>
+                            <th>Top expression</th>
+                            <th>Confidence</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>00:01.2</td>
+                            <td>#1</td>
+                            <td>Happy</td>
+                            <td>
+                                <div class="progress progress--thin">
+                                    <div class="progress__bar" style="width: 93%"></div>
+                                </div>
+                                <span class="tiny muted">0.93</span>
+                            </td>
+                            <td>Good lighting</td>
+                        </tr>
+                        <tr>
+                            <td>00:02.8</td>
+                            <td>#2</td>
+                            <td>Neutral</td>
+                            <td>
+                                <div class="progress progress--thin">
+                                    <div class="progress__bar" style="width: 62%"></div>
+                                </div>
+                                <span class="tiny muted">0.62</span>
+                            </td>
+                            <td>Slight head tilt</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer__wrap">
+            <span class="muted tiny">© 2025 FaceX UI</span>
+            <div class="footer__links">
+                <a href="#">Docs</a>
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- CSS-only Modal -->
+    <div id="details-modal" class="modal" aria-hidden="true">
+        <a class="modal__overlay" href="#" aria-label="Close"></a>
+        <div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+            <div class="modal__head">
+                <h3 id="modal-title">Face #1 — details</h3>
+                <a class="close" href="#" aria-label="Close">&times;</a>
+            </div>
+            <div class="modal__body">
+                <div class="grid-2">
+                    <div class="compare__col">
+                        <h4 class="tiny">Crop</h4>
+                        <div class="thumb-big" role="img" aria-label="Face crop"></div>
+                    </div>
+                    <div class="compare__col">
+                        <h4 class="tiny">All classes</h4>
+                        <div class="bars">
+                            <div class="bar"><span>Happy</span>
+                                <div class="progress">
+                                    <div class="progress__bar" style="width: 93%"></div>
+                                </div><em>0.93</em></div>
+                            <div class="bar"><span>Neutral</span>
+                                <div class="progress">
+                                    <div class="progress__bar" style="width: 21%"></div>
+                                </div><em>0.21</em></div>
+                            <div class="bar"><span>Surprised</span>
+                                <div class="progress">
+                                    <div class="progress__bar" style="width: 9%"></div>
+                                </div><em>0.09</em></div>
+                            <div class="bar"><span>Sad</span>
+                                <div class="progress">
+                                    <div class="progress__bar" style="width: 6%"></div>
+                                </div><em>0.06</em></div>
+                            <div class="bar"><span>Angry</span>
+                                <div class="progress">
+                                    <div class="progress__bar" style="width: 4%"></div>
+                                </div><em>0.04</em></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="muted tiny">Replace placeholders with backend values and overlays (face boxes, landmarks) via JS.</p>
+            </div>
+            <div class="modal__foot">
+                <a class="btn btn--ghost" href="#">Close</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
